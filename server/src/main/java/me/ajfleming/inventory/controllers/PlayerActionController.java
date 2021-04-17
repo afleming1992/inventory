@@ -58,7 +58,7 @@ public class PlayerActionController {
     Optional<Role> recipientRole = game.findRoleById(itemAction.getRecipientRoleId(), true);
     if (requestorRole.isPresent() && recipientRole.isPresent()) {
       Optional<Item> itemResult = requestorRole.get().findItemById(itemAction.getItemId(), true);
-      if (itemResult.isPresent() && itemResult.get().isSwapable()) {
+      if (itemResult.isPresent() && itemResult.get().isSwappable()) {
         socketEventService
             .sendEventToPlayer(requestorRole.get(), "ITEM_REMOVED", itemAction.getItemId());
         moveItemToRole(recipientRole.get(), itemResult.get());

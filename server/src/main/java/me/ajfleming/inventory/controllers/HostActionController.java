@@ -30,13 +30,8 @@ public class HostActionController {
     return game;
   }
 
-  public Optional<Game> loadGame(long gameId, String hostKey) {
-    Optional<Game> game = gameRepository.findById(gameId);
-    if(game.isPresent() && game.get().getHostGameKey().equals(hostKey)){
-      return game;
-    } else {
-      return Optional.empty();
-    }
+  public Optional<Game> loadGame(String hostKey) {
+    return gameRepository.findByHostKey(hostKey);
   }
 
   public Optional<Game> loadGame(long gameId) {

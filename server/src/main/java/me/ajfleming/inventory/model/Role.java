@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,10 +33,9 @@ public class Role {
   private String roleName;
   private boolean hidden;
   private String joinCode;
-  @OneToMany
   @Builder.Default
-  @JsonIgnore
-  private List<Item> itemsList = new ArrayList<>();
+  @OneToMany(mappedBy="itemOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private List<Item> items = new ArrayList<>();
 
   public void updateRole(Role updatedRole) {
     this.roleName = new NullCheck<String>().check(updatedRole.getRoleName(), roleName);
@@ -40,15 +43,16 @@ public class Role {
   }
 
   public void addItem(Item item) {
-    itemsList.add(item);
+    items.add(item);
   }
 
+  @JsonIgnore
   public List<Item> getVisibleItemsList() {
-    return this.itemsList.stream().filter(item -> !item.isHidden()).toList();
+    return this.items.stream().filter(item -> !item.isHidden()).toList();
   }
 
   public Optional<Item> findItemById(long itemId, boolean excludeHidden){
-    Stream<Item> itemStream = itemsList.stream().filter(item -> item.getId().equals(itemId));
+    Stream<Item> itemStream = items.stream().filter(item -> item.getId().equals(itemId));
     if (excludeHidden) {
       itemStream = itemStream.filter(item -> !item.isHidden());
     }

@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +16,9 @@ import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -25,8 +29,9 @@ public class Game {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
-  private String hostGameKey;
-  @OneToMany
+  private String hostKey;
+  @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+  @EqualsAndHashCode.Exclude @ToString.Exclude
   private List<Role> roles = new ArrayList<>();
 
   public void addRole(Role role) {
@@ -52,7 +57,7 @@ public class Game {
 
   public static class GameBuilder {
     public GameBuilder newGame() {
-       this.hostGameKey = UUID.randomUUID().toString();
+       this.hostKey = UUID.randomUUID().toString();
       return this;
     }
   }
