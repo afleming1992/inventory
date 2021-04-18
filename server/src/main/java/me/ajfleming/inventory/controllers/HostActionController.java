@@ -104,8 +104,9 @@ public class HostActionController {
     if(itemResult.isPresent()) {
       Item item = itemResult.get();
       item.setHidden(action.isHidden());
-      itemRepository.save(item);
+      item = itemRepository.save(item);
       socketService.sendItemUpdate(game, item);
+      socketService.sendHostRoleUpdate(game, item.getItemOwner());
     }
   }
 

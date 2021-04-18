@@ -62,3 +62,16 @@ export const createItem = (roleId: number, item: Item) => {
     }
   }
 }
+
+export const changeItemVisibility = (itemId: number, hidden: boolean) => {
+  return {
+    type: InventoryAction.ITEM_CHANGE_VISIBILITY,
+    meta: {
+      remote: true
+    },
+    payload: {
+      itemId,
+      hidden
+    }
+  }
+}

@@ -32,7 +32,7 @@ public class Item {
   private boolean swappable = true;
   @Builder.Default
   private boolean hidden = true;
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "item_owner")
   @JsonBackReference
   private Role itemOwner;

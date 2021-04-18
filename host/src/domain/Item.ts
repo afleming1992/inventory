@@ -6,5 +6,5 @@ export class Item {
   public maxUsages: number | undefined
   public timesUsed: number | undefined
   public swappable: boolean | undefined
-  public hidden: boolean | undefined
+  public hidden: boolean = true
 }

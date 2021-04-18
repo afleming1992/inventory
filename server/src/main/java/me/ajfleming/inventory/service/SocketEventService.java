@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import me.ajfleming.inventory.model.Game;
 import me.ajfleming.inventory.model.Item;
 import me.ajfleming.inventory.model.Role;
+import me.ajfleming.inventory.socket.event.ItemEvent;
 import me.ajfleming.inventory.user.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,10 @@ public class SocketEventService {
 
   public void sendGameUpdateToHost(Game game) {
     sendEventToHost(game, "GAME_UPDATE", game);
+  }
+
+  public void sendHostItemUpdate(Game game, Item item) {
+    sendEventToHost(game, "ITEM_UPDATE", new ItemEvent(item.getItemOwner(), item));
   }
 
   public void sendItemUpdate(Game game, Item item) {
