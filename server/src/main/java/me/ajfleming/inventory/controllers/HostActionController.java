@@ -11,6 +11,7 @@ import me.ajfleming.inventory.model.Item;
 import me.ajfleming.inventory.service.SocketEventService;
 import me.ajfleming.inventory.socket.action.ItemAction;
 import me.ajfleming.inventory.socket.action.ItemCreationAction;
+import me.ajfleming.inventory.socket.action.ItemUpdateAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import me.ajfleming.inventory.model.Role;
@@ -24,7 +25,7 @@ public class HostActionController {
   private final ItemRepository itemRepository;
   private final SocketEventService socketService;
 
-  public Game createGame(SocketIOClient client) {
+  public Game createGame() {
     Game game = Game.builder().newGame().build();
     game = gameRepository.save(game);
     return game;
@@ -49,38 +50,37 @@ public class HostActionController {
     socketService.sendGameUpdateToHost(game);
   }
 
-  public void addItemToRole(Game game, ItemCreationAction itemCreationAction) {
-    game.findRoleById(itemCreationAction.getRoleId(), false).ifPresent(
-      role -> {
-        Item item = Item.builder()
-            .name(itemCreationAction.getName())
-            .description(itemCreationAction.getDescription())
-            .imageUrl(itemCreationAction.getImageUrl())
-            .build();
-        role.addItem(item);
-      }
-    );
-    game = gameRepository.save(game);
-    socketService.sendGameUpdateToHost(game);
+  public void addItemToRole(Game game, ItemUpdateAction itemAction) {
+    Optional<Role> roleResult = game.findRoleById(itemAction.getRoleId(), false);
+    if(roleResult.isPresent()) {
+      Role role = roleResult.get();
+      Item item = itemAction.getItem();
+      item.setItemOwner(role);
+      item = itemRepository.save(item);
+      role.addItem(item);
+      socketService.sendHostRoleUpdate(game, role);
+      socketService.sendItemUpdate(game, item);
+    }
   }
 
   public void updateRole(Game game, Role updatedRole) {
-    game.findRoleById(updatedRole.getId(), false).ifPresent(
-      role -> {
-        role.updateRole(updatedRole);
-      }
-    );
-    game = gameRepository.save(game);
-    socketService.sendGameUpdateToHost(game);
+    Optional<Role> roleResult = game.findRoleById(updatedRole.getId(), false);
+    if(roleResult.isPresent()) {
+      Role role = roleResult.get();
+      role.updateRole(updatedRole);
+      roleRepository.save(role);
+      socketService.sendHostRoleUpdate(game, role);
+    }
   }
 
-  public void updateItem(Game game, Item updatedItem) {
-    Optional<Item> itemResult = itemRepository.findById(updatedItem.getId());
-    if(itemResult.isPresent()) {
-      Item item = itemResult.get().updateItem(updatedItem);
+  public void updateItem(Game game, ItemUpdateAction itemAction) {
+    Optional<Role> roleResult = game.findRoleById(itemAction.getRoleId(), false);
+    if(roleResult.isPresent()) {
+      Role role = roleResult.get();
+      Item item = itemAction.getItem();
+      item.setItemOwner(role);
       itemRepository.save(item);
-      socketService.sendEventToPlayer(item.getItemOwner(),"ITEM_UPDATE", item);
-      socketService.sendEventToHost(game, "ITEM_UPDATE", item);
+      socketService.sendItemUpdate(game, item);
     }
   }
 

@@ -1,6 +1,6 @@
 package me.ajfleming.inventory.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,13 +27,14 @@ public class Item {
   private String imageUrl;
   private String description;
   private Integer maxUsages;
-  private Integer usagesLeft;
+  private Integer timesUsed;
   @Builder.Default
   private boolean swappable = true;
   @Builder.Default
   private boolean hidden = true;
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "item_owner")
+  @JsonBackReference
   private Role itemOwner;
 
   public Item updateItem(Item updatedItem) {
@@ -41,15 +42,18 @@ public class Item {
     this.imageUrl = new NullCheck<String>().check(updatedItem.getImageUrl(), imageUrl);
     this.description = new NullCheck<String>().check(updatedItem.getDescription(), description);
     this.maxUsages = new NullCheck<Integer>().check(updatedItem.getMaxUsages(), maxUsages);
-    this.usagesLeft = new NullCheck<Integer>().check(updatedItem.getUsagesLeft(), usagesLeft);
+    this.timesUsed = new NullCheck<Integer>().check(updatedItem.getTimesUsed(), timesUsed);
     this.swappable = new NullCheck<Boolean>().check(updatedItem.isSwappable(), swappable);
     this.hidden = new NullCheck<Boolean>().check(updatedItem.isHidden(), hidden);
     return this;
   }
 
   public void useItem() {
-    if(maxUsages != null && usagesLeft != null && maxUsages > usagesLeft) {
-      usagesLeft--;
+    if(timesUsed == null) {
+      timesUsed = 0;
+    }
+    if(maxUsages != null && maxUsages > timesUsed) {
+      timesUsed++;
     }
   }
 }

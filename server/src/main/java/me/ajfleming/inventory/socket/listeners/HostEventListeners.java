@@ -10,6 +10,7 @@ import me.ajfleming.inventory.model.Role;
 import me.ajfleming.inventory.service.SocketEventService;
 import me.ajfleming.inventory.socket.action.ItemAction;
 import me.ajfleming.inventory.socket.action.ItemCreationAction;
+import me.ajfleming.inventory.socket.action.ItemUpdateAction;
 import me.ajfleming.inventory.socket.event.LoginEvent;
 import me.ajfleming.inventory.socket.event.RoleEvent;
 import me.ajfleming.inventory.socket.response.Response;
@@ -26,7 +27,7 @@ public class HostEventListeners extends RequestListener {
 
   @OnEvent("HOST_CREATE_GAME")
   public void onCreateGame(SocketIOClient client) {
-    Game game = hostActionController.createGame(client);
+    Game game = hostActionController.createGame();
     userManager.connectHost(client, game.getId());
     client.sendEvent("HOST_LOGIN_SUCCESS", game);
   }
@@ -52,10 +53,10 @@ public class HostEventListeners extends RequestListener {
   }
 
   @OnEvent("HOST_CREATE_ITEM")
-  public void onCreateItem(SocketIOClient client, ItemCreationAction itemCreationAction) {
+  public void onCreateItem(SocketIOClient client, ItemUpdateAction itemAction) {
     userManager.findConnectedHost(client).ifPresent(host ->
       hostActionController.loadGame(host.getGameId()).ifPresentOrElse(
-      game -> hostActionController.addItemToRole(game, itemCreationAction),
+      game -> hostActionController.addItemToRole(game, itemAction),
       () -> client.sendEvent("HOST_CREATE_ITEM_ERROR", Response.error("Game not found"))
     ));
   }
@@ -70,10 +71,10 @@ public class HostEventListeners extends RequestListener {
   }
 
   @OnEvent("HOST_UPDATE_ITEM")
-  public void onUpdateItem(SocketIOClient client, Item updatedItem) {
+  public void onUpdateItem(SocketIOClient client, ItemUpdateAction itemAction) {
     userManager.findConnectedHost(client).ifPresent(host ->
       hostActionController.loadGame(host.getGameId()).ifPresentOrElse(
-      game -> hostActionController.updateItem(game, updatedItem),
+      game -> hostActionController.updateItem(game, itemAction),
       () -> client.sendEvent("HOST_UPDATE_ITEM_ERROR", Response.error("Game not found"))
     ));
   }

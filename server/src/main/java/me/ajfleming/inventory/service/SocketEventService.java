@@ -34,7 +34,10 @@ public class SocketEventService {
     } else {
       sendEventToPlayer(item.getItemOwner(), "ITEM_ADDED", item);
     }
-    sendEventToHost(game, "ITEM_UPDATE", item);
+  }
+
+  public void sendHostRoleUpdate(Game game, Role role) {
+    sendEventToHost(game, "ROLE_UPDATE", role);
   }
 
   public void sendEventToPlayer(Role role, String eventName, Object payload) {

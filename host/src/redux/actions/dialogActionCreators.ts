@@ -1,4 +1,5 @@
-import {RoleModalActions} from "./types";
+import {ItemModalActions, RoleModalActions} from "./types";
+import {Role} from "../../domain/Role";
 
 export const openRoleCreateModal = () => {
   return {
@@ -18,5 +19,29 @@ export const openRoleUpdateModal = (roleId: number) => {
 export const closeRoleUpdateModal = () => {
   return {
     type: RoleModalActions.CLOSE_ROLE_MODAL
+  }
+}
+
+export const openItemCreateModal = (role: Role) => {
+  return {
+    type:ItemModalActions.OPEN_CREATE_ITEM_MODAL,
+    data: {
+      role
+    }
+  }
+}
+
+export const openItemUpdateModal = (itemId: number) => {
+  return {
+    type:ItemModalActions.OPEN_UPDATE_ITEM_MODAL,
+    data: {
+      itemId
+    }
+  }
+}
+
+export const closeItemUpdateModal = () => {
+  return {
+    type:ItemModalActions.CLOSE_ITEM_MODAL
   }
 }

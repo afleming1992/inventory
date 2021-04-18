@@ -18,6 +18,12 @@ export enum RoleModalActions {
   CLOSE_ROLE_MODAL="CLOSE_ROLE_MODAL"
 }
 
+export enum ItemModalActions {
+  OPEN_CREATE_ITEM_MODAL="OPEN_CREATE_ITEM_MODAL",
+  OPEN_UPDATE_ITEM_MODAL="OPEN_UPDATE_ITEM_MODAL",
+  CLOSE_ITEM_MODAL="CLOSE_ITEM_MODAL"
+}
+
 export interface SocketAction extends Action {
   type: InventoryAction,
   meta: {

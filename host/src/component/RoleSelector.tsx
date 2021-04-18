@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {Box, makeStyles, Tab, Tabs, Typography} from "@material-ui/core";
 import {Role} from "../domain/Role";
-import {AppState} from "../redux/reducers";
-import {connect} from "react-redux";
 import RoleManager from "./RoleManager";
+import RoleName from "./RoleName";
+import {connect} from "react-redux";
+import {AppState} from "../redux/reducers";
 
 interface RoleSelectorProps {
   roles: Role[]
@@ -12,25 +13,30 @@ interface RoleSelectorProps {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
     display: 'flex',
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
   },
+  tab: {
+    width: '100%'
+  }
 }));
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
   value: any;
+  className: any;
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, className, ...other } = props;
 
   return (
     <div
+      className={className}
       role="tabpanel"
       hidden={value !== index}
       id={`nav-tabpanel-${index}`}
@@ -67,7 +73,7 @@ const RoleSelector:React.FC<RoleSelectorProps> = (props) => {
         {
           props.roles.map((role) => {
             return (
-              <Tab label={role.roleName} value={role.id} />
+              <Tab label={<RoleName hidden={role.hidden} roleName={role.roleName || ""} />} value={role.id} />
             );
           })
         }
@@ -76,7 +82,7 @@ const RoleSelector:React.FC<RoleSelectorProps> = (props) => {
         props.roles.map((role) => {
           if (role.id) {
             return (
-              <TabPanel value={visibleRole} index={role.id}>
+              <TabPanel className={classes.tab} value={visibleRole} index={role.id}>
                 <RoleManager role={role}/>
               </TabPanel>
             );
