@@ -1,6 +1,6 @@
 import React from 'react';
 import {Item} from "../domain/Item";
-import ItemListItem from "./ItemListItem";
+import ItemCard from "./ItemCard";
 import {Button, makeStyles, Typography} from "@material-ui/core";
 import {useDispatch} from "react-redux";
 import {openItemCreateModal} from "../redux/actions/dialogActionCreators";
@@ -29,7 +29,7 @@ const ItemList: React.FC<ItemListProps> = (props) => {
       {
         props.items.map((item) => {
           return (
-            <ItemListItem key={item.id} item={item} />
+            <ItemCard key={item.id} item={item} />
           )
         })
       }

@@ -80,6 +80,7 @@ public class HostActionController {
       item.updateItem(action.getItem());
       item = itemRepository.save(item);
       socketService.sendHostRoleUpdate(game, item.getItemOwner());
+      socketService.sendItemUpdate(game, item);
     }
   }
 
@@ -91,10 +92,11 @@ public class HostActionController {
       Role newOwner = roleResult.get();
       Role previousOwner = item.getItemOwner();
       item.setItemOwner(roleResult.get());
-      itemRepository.save(item);
+      item = itemRepository.save(item);
       socketService.sendEventToPlayer(previousOwner, "ITEM_REMOVED", item.getId());
       socketService.sendEventToPlayer(newOwner, "ITEM_ADDED", item);
-      socketService.sendEventToHost(game, "ITEM_UPDATE", item);
+      socketService.sendEventToHost(game, "ITEM_REMOVED", new ItemUpdateAction(previousOwner.getId(), item));
+      socketService.sendEventToHost(game, "ITEM_ADDED", new ItemUpdateAction(newOwner.getId(), item));
     }
   }
 

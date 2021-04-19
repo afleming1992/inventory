@@ -98,3 +98,16 @@ export const useItem = (itemId: number) => {
     }
   }
 }
+
+export const moveItem = (recipientRoleId: number, itemId:number) => {
+  return {
+    type: InventoryAction.MOVE_ITEM,
+    meta: {
+      remote: true
+    },
+    payload: {
+      recipientRoleId,
+      itemId
+    }
+  }
+}

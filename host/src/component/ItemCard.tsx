@@ -4,9 +4,9 @@ import {Button, Card, CardActions, CardContent, CardMedia, makeStyles, Typograph
 import VisibilityToggle from "./VisibilityToggle";
 import {changeItemVisibility, updateRole, useItem} from "../redux/actions/inventoryActionCreators";
 import {useDispatch} from "react-redux";
-import {openItemUpdateModal} from "../redux/actions/dialogActionCreators";
+import {openItemMoveModal, openItemUpdateModal} from "../redux/actions/dialogActionCreators";
 
-interface ItemCard {
+interface ItemCardProps {
   item: Item
 }
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ItemCard: React.FC<ItemCard> = ({item, ...props}) => {
+const ItemCard: React.FC<ItemCardProps> = ({item, ...props}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -53,7 +53,7 @@ const ItemCard: React.FC<ItemCard> = ({item, ...props}) => {
   }
 
   const onMoveItem = () => {
-
+    dispatch(openItemMoveModal(item))
   }
 
   const isItemOutOfUses = () => {

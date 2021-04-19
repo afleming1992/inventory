@@ -6,6 +6,7 @@ import RoleUpdateModal from "../component/RoleUpdateModal";
 import {Container} from "@material-ui/core";
 import RoleSelector from '../component/RoleSelector';
 import ItemUpdateModal from "../component/ItemUpdateModal";
+import MoveItemModal from "../component/MoveItemModal";
 
 interface GameManagerProps {
 
@@ -17,7 +18,8 @@ const GameManager: React.FC<GameManagerProps> = (props) => {
       <GameNavBar />
       <RoleUpdateModal />
       <ItemUpdateModal />
-      <Container disableGutters>
+      <MoveItemModal />
+      <Container maxWidth="xl" disableGutters>
         <RoleSelector />
       </Container>
     </>

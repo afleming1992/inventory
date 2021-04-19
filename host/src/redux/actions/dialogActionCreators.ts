@@ -43,6 +43,21 @@ export const openItemUpdateModal = (item: Item) => {
 
 export const closeItemUpdateModal = () => {
   return {
-    type:ItemModalActions.CLOSE_ITEM_MODAL
+    type:ItemModalActions.CLOSE_ITEM_UPDATE_MODAL
+  }
+}
+
+export const openItemMoveModal = (item: Item) => {
+  return {
+    type: ItemModalActions.OPEN_MOVE_ITEM_MODAL,
+    data: {
+      item
+    }
+  }
+}
+
+export const closeItemMoveModal = () => {
+  return {
+    type: ItemModalActions.CLOSE_MOVE_ITEM_MODAL
   }
 }

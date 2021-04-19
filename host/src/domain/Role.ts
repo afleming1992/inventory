@@ -5,5 +5,5 @@ export class Role {
   public roleName: string | undefined
   public hidden: boolean = true
   public joinCode: string | undefined
-  public items: Item[] | undefined
+  public items: Item[] = []
 }
