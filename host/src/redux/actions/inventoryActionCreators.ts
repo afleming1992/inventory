@@ -1,5 +1,4 @@
 import {InventoryAction, SocketAction} from "./types";
-import {Role} from "../../domain/Role";
 import {Item} from "../../domain/Item";
 
 export const createGame = (): SocketAction => {
@@ -63,6 +62,18 @@ export const createItem = (roleId: number, item: Item) => {
   }
 }
 
+export const updateItem = (item: Item) => {
+  return {
+    type: InventoryAction.UPDATE_ITEM,
+    meta: {
+      remote: true
+    },
+    payload: {
+      item
+    }
+  }
+}
+
 export const changeItemVisibility = (itemId: number, hidden: boolean) => {
   return {
     type: InventoryAction.ITEM_CHANGE_VISIBILITY,
@@ -72,6 +83,18 @@ export const changeItemVisibility = (itemId: number, hidden: boolean) => {
     payload: {
       itemId,
       hidden
+    }
+  }
+}
+
+export const useItem = (itemId: number) => {
+  return {
+    type: InventoryAction.USE_ITEM,
+    meta: {
+      remote: true
+    },
+    payload: {
+      itemId
     }
   }
 }

@@ -14,7 +14,7 @@ import {TransitionProps} from "@material-ui/core/transitions";
 import {Item} from "../domain/Item";
 import {closeItemUpdateModal} from "../redux/actions/dialogActionCreators";
 import {Role} from "../domain/Role";
-import {createItem} from "../redux/actions/inventoryActionCreators";
+import {createItem, updateItem} from "../redux/actions/inventoryActionCreators";
 import {AppState} from "../redux/reducers";
 
 export enum ItemUpdateModalMode {
@@ -45,12 +45,24 @@ const ItemUpdateModal:React.FC<ItemUpdateModalProps> = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const [name, setName] = useState(props.currentItem.name || "");
-  const [imageUrl, setImageUrl] = useState(props.currentItem.imageUrl || "");
-  const [description, setDescription] = useState(props.currentItem.description || "");
+  const [name, setName] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [description, setDescription] = useState("");
   const [maxUsages, setMaxUsages] = useState<number | undefined>(undefined);
-  const [swappable, setSwappable] = useState(props.currentItem.swappable || true);
-  const [visible, setVisible] = useState(!props.currentItem.hidden || false);
+  const [swappable, setSwappable] = useState(true);
+  const [visible, setVisible] = useState( false);
+
+  React.useEffect(
+    () => {
+      setName(props.currentItem.name || "");
+      setImageUrl(props.currentItem.imageUrl || "");
+      setDescription(props.currentItem.description || "");
+      setMaxUsages(props.currentItem.maxUsages);
+      setSwappable(props.currentItem.swappable);
+      setVisible(!props.currentItem.hidden);
+    },
+    [props.currentItem]
+  )
 
   const onSubmit = () => {
     const item = new Item();
@@ -61,8 +73,10 @@ const ItemUpdateModal:React.FC<ItemUpdateModalProps> = (props) => {
     item.maxUsages = maxUsages;
     item.swappable = swappable;
     item.hidden = !visible;
-    if(props.assignedToRole){
+    if(props.assignedToRole && props.mode === ItemUpdateModalMode.CREATE){
       dispatch(createItem(props.assignedToRole.id || 0, item));
+    } else {
+      dispatch(updateItem(item));
     }
     handleClose();
   }
@@ -127,7 +141,7 @@ const ItemUpdateModal:React.FC<ItemUpdateModalProps> = (props) => {
             />
         </DialogContent>
         <DialogActions>
-          <Button disabled={!canSubmit()} onClick={onSubmit}>Create</Button>
+          <Button disabled={!canSubmit()} onClick={onSubmit}>{ props.mode === ItemUpdateModalMode.CREATE ? "Create" : "Update" }</Button>
         </DialogActions>
       </form>
     </Dialog>

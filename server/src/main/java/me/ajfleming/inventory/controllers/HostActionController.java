@@ -73,14 +73,13 @@ public class HostActionController {
     }
   }
 
-  public void updateItem(Game game, ItemUpdateAction itemAction) {
-    Optional<Role> roleResult = game.findRoleById(itemAction.getRoleId(), false);
-    if(roleResult.isPresent()) {
-      Role role = roleResult.get();
-      Item item = itemAction.getItem();
-      item.setItemOwner(role);
-      itemRepository.save(item);
-      socketService.sendItemUpdate(game, item);
+  public void updateItem(Game game, ItemUpdateAction action) {
+    Optional<Item> itemResult = itemRepository.findById(action.getItem().getId());
+    if(itemResult.isPresent()) {
+      Item item = itemResult.get();
+      item.updateItem(action.getItem());
+      item = itemRepository.save(item);
+      socketService.sendHostRoleUpdate(game, item.getItemOwner());
     }
   }
 
@@ -115,7 +114,8 @@ public class HostActionController {
     if(itemResult.isPresent()) {
       Item item = itemResult.get();
       item.useItem();
-      itemRepository.save(item);
+      item = itemRepository.save(item);
+      socketService.sendHostRoleUpdate(game, item.getItemOwner());
       socketService.sendItemUpdate(game, item);
     }
   }

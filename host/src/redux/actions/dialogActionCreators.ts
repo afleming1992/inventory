@@ -1,5 +1,6 @@
 import {ItemModalActions, RoleModalActions} from "./types";
 import {Role} from "../../domain/Role";
+import {Item} from "../../domain/Item";
 
 export const openRoleCreateModal = () => {
   return {
@@ -31,11 +32,11 @@ export const openItemCreateModal = (role: Role) => {
   }
 }
 
-export const openItemUpdateModal = (itemId: number) => {
+export const openItemUpdateModal = (item: Item) => {
   return {
     type:ItemModalActions.OPEN_UPDATE_ITEM_MODAL,
     data: {
-      itemId
+      item
     }
   }
 }
