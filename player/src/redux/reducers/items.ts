@@ -21,14 +21,19 @@ export default function itemReducer(state: ItemState = initialState, action: any
     case ShownItemAction.DIMISS:
       return {...state, shownItems: removeShownItem(state.shownItems, action.data.id)}
     case Listeners.ITEM_ADDED:
-      return {...state, items: addOrReplaceItem(state.items, action.data.item)}
+      return {...state, items: sortItems(addOrReplaceItem(state.items, action.data.item))}
     case Listeners.ITEM_REMOVED:
-      return {...state, items: removeItem(state.items, action.data)}
+      return {...state, items: sortItems(removeItem(state.items, action.data))}
     case Listeners.ROLE_UPDATE:
-      return {...state, items: action.data.items}
+      return {...state, items: sortItems(action.data.items)}
     default:
       return state;
   }
+}
+
+function sortItems(items: Item[]) {
+  return items.sort((a, b) => a.name.localeCompare(b.name))
+
 }
 
 function addOrReplaceItem(items: Item[], replacementItem: Item) {

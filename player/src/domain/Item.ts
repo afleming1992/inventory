@@ -1,6 +1,6 @@
 export class Item {
   public id: number | undefined
-  public name: string | undefined
+  public name: string = ""
   public imageUrl: string | undefined
   public description: string | undefined
   public maxUsages: number | undefined
