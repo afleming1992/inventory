@@ -71,7 +71,7 @@ const RoleSelector:React.FC<RoleSelectorProps> = (props) => {
         className={classes.tabs}
       >
         {
-          props.roles.map((role) => {
+          props.roles.sort((a, b) => a.roleName.localeCompare(b.roleName)).map((role) => {
             return (
               <Tab label={<RoleName hidden={role.hidden} roleName={role.roleName || ""} />} value={role.id} />
             );
