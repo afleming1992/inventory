@@ -68,7 +68,7 @@ public class HostActionController {
     if(roleResult.isPresent()) {
       Role role = roleResult.get();
       role.updateRole(updatedRole);
-      roleRepository.save(role);
+      role = roleRepository.save(role);
       socketService.sendHostRoleUpdate(game, role);
     }
   }

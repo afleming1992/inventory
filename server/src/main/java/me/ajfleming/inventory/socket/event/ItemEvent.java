@@ -2,12 +2,12 @@ package me.ajfleming.inventory.socket.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import me.ajfleming.inventory.model.Item;
-import me.ajfleming.inventory.model.Role;
+import me.ajfleming.inventory.model.ItemPlayerView;
+import me.ajfleming.inventory.model.RolePlayerView;
 
 @Data
 @AllArgsConstructor
 public class ItemEvent {
-  private Role role;
-  private Item item;
+  private RolePlayerView role;
+  private ItemPlayerView item;
 }

@@ -56,4 +56,16 @@ public class Item {
       timesUsed++;
     }
   }
+
+  public ItemPlayerView toPlayerView() {
+    return ItemPlayerView.builder()
+        .id(this.id)
+        .name(this.name)
+        .imageUrl(this.imageUrl)
+        .description(this.description)
+        .maxUsages(this.maxUsages)
+        .timesUsed(this.timesUsed)
+        .swappable(this.swappable)
+        .build();
+  }
 }

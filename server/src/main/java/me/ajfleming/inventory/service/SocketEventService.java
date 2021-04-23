@@ -17,7 +17,8 @@ public class SocketEventService {
   public final SocketIOServer socketIOServer;
   public final UserManager userManager;
 
-  public void loginPlayerToComms(SocketIOClient client, Role role) {
+  public void loginPlayerToComms(SocketIOClient client, Game game, Role role) {
+    client.joinRoom("/game/"+ game.getId());
     client.joinRoom("/player/"+ role.getId());
   }
 
@@ -29,15 +30,11 @@ public class SocketEventService {
     sendEventToHost(game, "GAME_UPDATE", game);
   }
 
-  public void sendHostItemUpdate(Game game, Item item) {
-    sendEventToHost(game, "ITEM_UPDATE", new ItemEvent(item.getItemOwner(), item));
-  }
-
   public void sendItemUpdate(Game game, Item item) {
     if(item.isHidden()) {
       sendEventToPlayer(item.getItemOwner(), "ITEM_REMOVED", item.getId());
     } else {
-      sendEventToPlayer(item.getItemOwner(), "ITEM_ADDED", item);
+      sendEventToPlayer(item.getItemOwner(), "ITEM_ADDED", new ItemEvent(null, item.toPlayerView()));
     }
   }
 
@@ -59,5 +56,9 @@ public class SocketEventService {
 
   private String getHostRoomName(Game game) {
     return "/host/" + game.getId();
+  }
+
+  public void sendRolesUpdateToGame(Game game, Role role) {
+
   }
 }

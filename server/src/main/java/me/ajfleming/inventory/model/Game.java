@@ -2,8 +2,10 @@ package me.ajfleming.inventory.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Stream;
 import javax.persistence.CascadeType;
@@ -32,7 +34,7 @@ public class Game {
   private String hostKey;
   @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
   @EqualsAndHashCode.Exclude @ToString.Exclude
-  private List<Role> roles = new ArrayList<>();
+  private Set<Role> roles = new HashSet<>();
 
   public void addRole(Role role) {
     roles.add(role);
@@ -53,6 +55,11 @@ public class Game {
   @JsonIgnore
   public List<Role> getVisibleRoles() {
     return roles.stream().filter(role -> !role.isHidden()).toList();
+  }
+
+  @JsonIgnore
+  public List<RolePlayerView> getVisibleRolesPlayerView() {
+    return getVisibleRoles().stream().map(role -> role.toPlayerView(false)).toList();
   }
 
   public static class GameBuilder {

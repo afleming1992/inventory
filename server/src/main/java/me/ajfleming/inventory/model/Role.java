@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +37,7 @@ public class Role {
   private boolean hidden;
   private String joinCode;
   @Builder.Default
-  @OneToMany(mappedBy="itemOwner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy="itemOwner", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
   @JsonManagedReference
   private List<Item> items = new ArrayList<>();
 
@@ -58,6 +61,16 @@ public class Role {
       itemStream = itemStream.filter(item -> !item.isHidden());
     }
     return itemStream.findFirst();
+  }
+
+  public RolePlayerView toPlayerView(boolean includeItems) {
+    RolePlayerView.RolePlayerViewBuilder builder = RolePlayerView.builder()
+        .id(this.id)
+        .name(this.roleName);
+    if(includeItems) {
+      builder.items(this.getVisibleItemsList().stream().map(Item::toPlayerView).toList());
+    }
+    return builder.build();
   }
 
   public static class RoleBuilder {

@@ -24,8 +24,8 @@ public class PlayerEventListeners extends RequestListener {
     gameRepository.findById(login.getGameId()).ifPresent(game ->
       playerActionController.loadRole(game, login.getJoinCode()).ifPresentOrElse(role -> {
       userManager.connectPlayer(login.getGameId(), role.getId(), client);
-      playerActionController.setupPlayerOnLogin(client, role);
-      client.sendEvent("LOGIN_SUCCESS");
+      playerActionController.setupPlayerOnLogin(client, game, role);
+      client.sendEvent("LOGIN_SUCCESS", Response.success("You have joined the game!"));
     }, () -> {
       client.sendEvent("LOGIN_ERROR", Response.error("Join Code is not valid!"));
     }));
